@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asker Takvimi</title>
+<title>İsmetcan'ın ŞAFAKSAYARI</title>
 <style>
   :root{
     --bg1:#0f1f14;
@@ -212,21 +212,62 @@
     z-index:50;
   }
   .anthem-badge.show{ display:flex; }
+
+  .intro-slides{
+    position:fixed;
+    inset:0;
+    background:#000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:90;
+  }
+  .intro-slides.show{ display:flex; }
+  .intro-slides img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    opacity:0;
+    transition:opacity .6s ease;
+  }
+  .intro-slides img.visible{ opacity:1; }
+  .intro-caption{
+    position:fixed;
+    bottom:26px;
+    left:0;right:0;
+    text-align:center;
+    color:#fff;
+    font-size:1.3rem;
+    font-weight:800;
+    text-shadow:0 2px 8px rgba(0,0,0,.8);
+    letter-spacing:1px;
+    z-index:91;
+    display:none;
+  }
+  .intro-caption.show{ display:block; }
 </style>
 </head>
 <body>
 
   <div class="start-overlay" id="startOverlay">
     <div class="flag">🇹🇷</div>
-    <h2>İstiklal Marşı ile Başla</h2>
+    <h2>İsmetcan'ın ŞAFAKSAYARI</h2>
     <p>Sayfa açılırken tarayıcılar otomatik ses çalmayı engelliyor — devam etmek için dokun.</p>
     <button class="start-btn" id="startBtn">🔊 Başlat</button>
   </div>
 
+  <div class="intro-slides" id="introSlides">
+    <img src="gokde-simsek.jpeg" id="introImg1" alt="Gökde Şimşek">
+    <img src="canim-anam.jpeg" id="introImg2" alt="Canım Anam">
+  </div>
+  <div class="intro-caption" id="introCaption">İsmetcan'ın ŞAFAKSAYARI</div>
+
   <div class="anthem-badge" id="anthemBadge">🎵 İstiklal Marşı çalıyor</div>
 
+  <div id="mainContent" style="display:none;">
+
   <div class="header">
-    <h1>🎖️ Asker Takvimi</h1>
+    <h1>🎖️ İsmetcan'ın ŞAFAKSAYARI</h1>
     <div class="countdown-box">
       <div class="countdown-number" id="countdownNumber">--</div>
       <div class="countdown-label" id="countdownLabel">gün kaldı</div>
@@ -249,6 +290,8 @@
 
   <div class="footer-msg">
     5 Eylül'de yola çıktı, 30 Eylül'de yemin töreniyle geri dönüyor. Her geçen gün bir asker daha eve yaklaşıyor! 💪
+  </div>
+
   </div>
 
 <script>
@@ -381,9 +424,35 @@
     });
   }
 
+  const introSlides = document.getElementById('introSlides');
+  const introCaption = document.getElementById('introCaption');
+  const introImg1 = document.getElementById('introImg1');
+  const introImg2 = document.getElementById('introImg2');
+  const mainContent = document.getElementById('mainContent');
+
+  function runIntro(){
+    introSlides.classList.add('show');
+    introCaption.classList.add('show');
+
+    setTimeout(()=> introImg1.classList.add('visible'), 100);
+
+    setTimeout(()=>{
+      introImg1.classList.remove('visible');
+      setTimeout(()=> introImg2.classList.add('visible'), 500);
+    }, 2600);
+
+    setTimeout(()=>{
+      introSlides.classList.remove('show');
+      introCaption.classList.remove('show');
+      introImg2.classList.remove('visible');
+      mainContent.style.display = 'block';
+    }, 5200);
+  }
+
   startBtn.addEventListener('click', ()=>{
     startOverlay.style.display = 'none';
     playAnthem();
+    runIntro();
   });
 </script>
 </body>

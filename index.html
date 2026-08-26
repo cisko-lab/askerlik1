@@ -170,6 +170,12 @@
   .start-overlay .flag{
     font-size:3.2rem;
   }
+  .start-overlay .hero-photo{
+    width:min(78vw, 300px);
+    max-height:42vh;
+    object-fit:contain;
+    filter:drop-shadow(0 10px 24px rgba(0,0,0,.6));
+  }
   .start-overlay h2{
     color:var(--text);
     font-size:1.15rem;
@@ -196,6 +202,33 @@
   .start-btn:active{
     transform:scale(.97);
   }
+  .music-choices{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .music-btn{
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:14px 22px;
+    border-radius:14px;
+    font-size:.95rem;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    min-width:130px;
+  }
+  .music-btn span.icon{ font-size:1.6rem; }
+  .music-btn:active{ transform:scale(.97); }
+  .music-btn.selected{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent) inset;
+  }
   .anthem-badge{
     position:fixed;
     top:14px;
@@ -212,6 +245,85 @@
     z-index:50;
   }
   .anthem-badge.show{ display:flex; }
+
+  .mute-btn{
+    position:fixed;
+    top:14px;
+    left:14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--text);
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:1.1rem;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:50;
+    box-shadow:0 4px 12px rgba(0,0,0,.35);
+  }
+  .mute-btn.show{ display:flex; }
+
+  .mood-card{
+    width:100%;
+    max-width:420px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+    margin-top:26px;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+    text-align:center;
+  }
+  .mood-title{
+    font-size:1.05rem;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:14px;
+  }
+  .mood-options{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .mood-option{
+    flex:1;
+    min-width:100px;
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:14px 10px;
+    border-radius:12px;
+    font-size:.85rem;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .mood-option .mood-icon{ font-size:1.4rem; }
+  .mood-option:active{ transform:scale(.97); }
+  .mood-option.active{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent) inset;
+  }
+  .mood-result{
+    margin-top:18px;
+    font-size:3.5rem;
+    min-height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .mood-result-text{
+    margin-top:4px;
+    font-size:.85rem;
+    color:var(--muted);
+  }
 
   .intro-slides{
     position:fixed;
@@ -256,10 +368,19 @@
 <body>
 
   <div class="start-overlay" id="startOverlay">
-    <div class="flag">🇹🇷</div>
+    <img class="hero-photo" src="asker-logo.png" alt="İsmetcan">
     <h2>İsmetcan'ın ŞAFAKSAYARI</h2>
-    <p>Sayfa açılırken tarayıcılar otomatik ses çalmayı engelliyor — devam etmek için dokun.</p>
-    <button class="start-btn" id="startBtn">🔊 Başlat</button>
+    <p>Açılışta çalacak marşı seç:</p>
+    <div class="music-choices">
+      <button class="music-btn" id="btnIstiklal" data-src="istiklal-marsi.mp3">
+        <span class="icon">🎺</span>
+        İstiklal Marşı
+      </button>
+      <button class="music-btn" id="btnKomando" data-src="komando-marsi.mp3">
+        <span class="icon">🪖</span>
+        Komando Marşı
+      </button>
+    </div>
   </div>
 
   <div class="intro-slides" id="introSlides">
@@ -269,6 +390,7 @@
   <div class="intro-caption" id="introCaption">İsmetcan'ın ŞAFAKSAYARI</div>
 
   <div class="anthem-badge" id="anthemBadge">🎵 İstiklal Marşı çalıyor</div>
+  <button class="mute-btn" id="muteBtn">🔊</button>
 
   <div id="mainContent" style="display:none;">
 
@@ -279,6 +401,26 @@
       <div class="countdown-label" id="countdownLabel">gün kaldı</div>
     </div>
     <div class="sub-note" id="subNote"></div>
+  </div>
+
+  <div class="mood-card">
+    <div class="mood-title">İsmetcan ne yapsın?</div>
+    <div class="mood-options">
+      <button class="mood-option" data-mood="sinav">
+        <span class="mood-icon">🏋️</span>
+        Şınav
+      </button>
+      <button class="mood-option" data-mood="mintika">
+        <span class="mood-icon">🧹</span>
+        Mıntıka Temizliği
+      </button>
+      <button class="mood-option" data-mood="dinlenme">
+        <span class="mood-icon">🛌</span>
+        Dinlenme
+      </button>
+    </div>
+    <div class="mood-result" id="moodResult"></div>
+    <div class="mood-result-text" id="moodResultText"></div>
   </div>
 
   <div class="calendar">
@@ -381,21 +523,42 @@
     daysGrid.appendChild(cell);
   }
 
-  // ---- İstiklal Marşı ----
-  // Gerçek ses dosyası kullanmak için bu HTML dosyasıyla aynı klasöre
-  // "istiklal-marsi.mp3" adında bir dosya koy. Dosya yoksa basit,
-  // temsili bir enstrümantal melodi otomatik olarak çalınır.
+  // ---- Marş Seçimi ----
+  // Bu HTML dosyasıyla aynı klasörde "istiklal-marsi.mp3" ve
+  // "komando-marsi.mp3" dosyaları bulunmalı. Dosya bulunamazsa
+  // basit, temsili bir enstrümantal melodi otomatik çalınır.
   const startOverlay = document.getElementById('startOverlay');
-  const startBtn = document.getElementById('startBtn');
+  const btnIstiklal = document.getElementById('btnIstiklal');
+  const btnKomando = document.getElementById('btnKomando');
   const anthemBadge = document.getElementById('anthemBadge');
-  const mp3Audio = new Audio('istiklal-marsi.mp3');
+  const muteBtn = document.getElementById('muteBtn');
 
-  function showBadge(){
+  let currentAudio = null;   // mp3 çalınıyorsa
+  let synthGainNodes = [];   // sentez melodi çalınıyorsa
+  let isMuted = false;
+
+  function showBadge(text){
+    anthemBadge.textContent = '🎵 ' + text + ' çalıyor';
     anthemBadge.classList.add('show');
+    muteBtn.classList.add('show');
   }
 
-  function playSynthAnthem(){
+  function applyMuteState(){
+    muteBtn.textContent = isMuted ? '🔇' : '🔊';
+    if(currentAudio) currentAudio.muted = isMuted;
+    synthGainNodes.forEach(g=>{
+      g.gain.value = isMuted ? 0 : g._targetVolume;
+    });
+  }
+
+  muteBtn.addEventListener('click', ()=>{
+    isMuted = !isMuted;
+    applyMuteState();
+  });
+
+  function playSynthAnthem(label){
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    synthGainNodes = [];
     // Basit, temsili bir marş melodisi (gerçek notasyon değil, sentez tonlar)
     const notes = [
       196,196,233,261, 293,261,233,196,
@@ -411,22 +574,28 @@
       const gain = ctx.createGain();
       osc.type = 'triangle';
       osc.frequency.value = freq;
+      const vol = isMuted ? 0 : 0.18;
       gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.linearRampToValueAtTime(0.18, t + 0.03);
+      gain.gain.linearRampToValueAtTime(vol, t + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.0001, t + step*0.95);
+      gain._targetVolume = 0.18;
       osc.connect(gain).connect(ctx.destination);
       osc.start(t);
       osc.stop(t + step);
+      synthGainNodes.push(gain);
       t += step;
     });
-    showBadge();
+    showBadge(label);
   }
 
-  function playAnthem(){
-    mp3Audio.play().then(()=>{
-      showBadge();
+  function playChosenMusic(src, label){
+    const audio = new Audio(src);
+    audio.muted = isMuted;
+    audio.play().then(()=>{
+      currentAudio = audio;
+      showBadge(label);
     }).catch(()=>{
-      playSynthAnthem();
+      playSynthAnthem(label);
     });
   }
 
@@ -455,10 +624,36 @@
     }, 5200);
   }
 
-  startBtn.addEventListener('click', ()=>{
+  function handleMusicChoice(btn){
+    const src = btn.getAttribute('data-src');
+    const label = btn.textContent.trim();
     startOverlay.style.display = 'none';
-    playAnthem();
+    playChosenMusic(src, label);
     runIntro();
+  }
+
+  btnIstiklal.addEventListener('click', ()=> handleMusicChoice(btnIstiklal));
+  btnKomando.addEventListener('click', ()=> handleMusicChoice(btnKomando));
+
+  // ---- İsmetcan ne yapsın? ----
+  const moodOptions = document.querySelectorAll('.mood-option');
+  const moodResult = document.getElementById('moodResult');
+  const moodResultText = document.getElementById('moodResultText');
+
+  const moodMap = {
+    sinav:   { emoji: '😢', text: 'Şınav var, moral bozuk...' },
+    mintika: { emoji: '😢', text: 'Mıntıka temizliği, moral bozuk...' },
+    dinlenme:{ emoji: '😄', text: 'Dinlenme var, moral yerinde!' }
+  };
+
+  moodOptions.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      moodOptions.forEach(b=> b.classList.remove('active'));
+      btn.classList.add('active');
+      const mood = moodMap[btn.getAttribute('data-mood')];
+      moodResult.textContent = mood.emoji;
+      moodResultText.textContent = mood.text;
+    });
   });
 </script>
 </body>
